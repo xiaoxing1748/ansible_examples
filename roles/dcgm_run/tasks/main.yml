@@ -1,0 +1,74 @@
+- name: Ensure /root/aleo-ws directory exists
+  file:
+    path: /root/aleo-ws
+    state: directory
+    mode: '0755'
+
+- name: Copy dcgm.sh files to /root/aleo-ws
+  copy:
+    src: dcgm.sh
+    dest: /root/aleo-ws/dcgm.sh
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Check if dcgm-exporter Docker image exists
+  shell: docker images | grep dcgm-exporter
+  register: docker_image_check
+  changed_when: false
+  failed_when: false
+
+# - name: Check nvidia-container-toolkit
+#   shell: nvidia-container-toolkit -version | grep version
+#   register: nv_toolkit_check
+#   changed_when: false
+#   failed_when: false
+
+# - name: Add NVIDIA GPG key and repository
+#   when: nv_toolkit_check.rc != 0  # Only load if image not found
+#   shell: |
+#     curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+#     && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+#       sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+#       sudo apt-add-repository -y /etc/apt/sources.list.d/nvidia-container-toolkit.list
+#   register: nv_gpgkey_check
+#   changed_when: false
+#   failed_when: false
+
+
+# - name: Install nvidia-docker2 and nvidia-container-toolkit
+#   when: nv_gpgkey_check.rc != 0  # Only load if image not found
+#   apt:
+#     name:
+#       - nvidia-docker2
+#       - nvidia-container-toolkit
+#     state: present
+#     update_cache: yes
+#   register: nv_toolkit_install_check
+#   changed_when: false
+#   failed_when: false
+
+# - name: Restart Docker service
+#   when: nv_toolkit_install_check.rc != 0  # Only load if image not found
+#   systemd:
+#     name: docker
+#     state: restarted
+#   become: true
+
+- name: Copy dcgm-exporter.tar files to /root/aleo-ws
+  when: docker_image_check.rc != 0  # Only load if image not found
+  copy:
+    src: dcgm-exporter.tar
+    dest: /root/aleo-ws/dcgm-exporter.tar
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Load dcgm-exporter Docker image if not present
+  shell: docker load -i /root/aleo-ws/dcgm-exporter.tar
+  when: docker_image_check.rc != 0  # Only load if image not found
+
+- name: Execute dcgm.sh script
+  shell: /bin/bash /root/aleo-ws/dcgm.sh
+  args:
+    chdir: /root/aleo-ws

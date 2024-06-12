@@ -1,0 +1,40 @@
+- name: Edit /etc/hosts
+  become: true
+  lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1 {{ ansible_default_ipv4.address | regex_replace('\\.', '-') }}"
+    state: present
+
+- name: Change hostname
+  become: true
+  command: hostnamectl set-hostname {{ ansible_default_ipv4.address | regex_replace('\\.', '-') }}
+
+- name: Install apt packages
+  become: true
+  apt:
+    name: 
+      - openssh-client
+      - unzip
+      - net-tools
+      - nvtop
+    state: present
+    update_cache: yes
+
+# - name: Copy SSH configuration file
+#   become: true
+#   copy:
+#     src: ssh_config
+#     dest: ~/.ssh/config
+#     owner: "{{ ansible_user_id }}"
+#     mode: '0600'
+
+- name: Edit ~/.bashrc
+  lineinfile:
+    path: ~/.bashrc
+    line: 'alias f2log="tail -100f /logs/f2pool.log"'
+    state: present
+
+- name: Source ~/.bashrc
+  shell: source ~/.bashrc
+  args:
+    executable: /bin/bash

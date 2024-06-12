@@ -1,0 +1,17 @@
+process_names:
+# 挖矿进程
+  - name: "{{.Matches}}"
+    cmdline:
+    - 'aleo-pool-prover'
+    
+  - name: "{{.Matches}}"
+    cmdline:
+    - 'aleo-solo-prover'
+
+  - name: "{{.Matches}}"
+    cmdline:
+    - 'f3-prover'
+
+  - name: "{{.Matches}}"
+    cmdline:
+    - 'f3-pool'

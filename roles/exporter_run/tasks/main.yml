@@ -1,0 +1,44 @@
+- name: Check if node_exporter process is running
+  command: pgrep -f node_exporter
+  register: node_exporter_process
+  ignore_errors: true
+
+- name: Kill existing node_exporter process if running
+  command: pkill -f node_exporter
+  when: node_exporter_process.rc == 0
+
+- name: Start node_exporter
+  shell: "nohup ./node_exporter &"
+  args:
+    chdir: /usr/local/node_exporter/
+
+- name: Check if process-exporter process is running
+  command: pgrep -f process-exporter
+  register: process_exporter_process
+  ignore_errors: true
+
+- name: Kill existing process-exporter process if running
+  command: pkill -f process-exporter
+  when: process_exporter_process.rc == 0
+    
+- name: Start process-exporter
+  shell: "nohup ./process-exporter -config.path process_name.yml > /dev/null 2>&1 &"
+  args:
+    chdir: /usr/local/process-exporter/
+    executable: /bin/bash
+  environment:
+    PATH: "{{ ansible_env.PATH }}"
+
+- name: Check if grok_exporter process is running
+  command: pgrep -f grok_exporter
+  register: grok_exporter_process
+  ignore_errors: true
+
+- name: Kill existing grok_exporter process if running
+  command: pkill -f grok_exporter
+  when: grok_exporter_process.rc == 0
+
+- name: Start grok_exporter
+  shell: "nohup ./grok_exporter -config grok_config.yml &"
+  args:
+    chdir: /usr/local/grok_exporter/

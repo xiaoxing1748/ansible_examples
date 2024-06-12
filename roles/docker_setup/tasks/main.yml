@@ -1,0 +1,27 @@
+- name: Ensure /root/aleo-ws directory exists
+  file:
+    path: /root/aleo-ws
+    state: directory
+    mode: '0755'
+
+- name: Copy install_docker.sh files to /root/aleo-ws
+  copy:
+    src: install_docker.sh
+    dest: /root/aleo-ws/install_docker.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Check if Docker is already installed
+  shell: docker -v | grep version
+  register: docker_version_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Docker if not already installed
+  shell: bash /root/aleo-ws/install_docker.sh
+  when: docker_version_check.rc != 0  # Only install if Docker not installed
+  args:
+    executable: /bin/bash
+  environment:
+    DOWNLOAD_URL: "https://mirrors.tuna.tsinghua.edu.cn/docker-ce"

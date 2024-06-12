@@ -1,0 +1,43 @@
+- name: Copy install_v2ray_with_ghproxy.sh files to /root/aleo-ws
+  copy:
+    src: install_v2ray_with_ghproxy.sh
+    dest: /root/aleo-ws/install_v2ray_with_ghproxy.sh
+    owner: root
+    group: root
+    mode: '0777'
+
+- name: Check if V2Ray is already installed
+  shell: systemctl status v2ray|grep /etc/systemd/system/v2ray.service.d
+  register: v2ray_check
+  changed_when: false
+  failed_when: false
+
+- name: Install V2Ray if not already installed
+  shell: bash /root/aleo-ws/install_v2ray_with_ghproxy.sh
+  when: v2ray_check.rc != 0  # Only install if V2Ray not installed
+
+- name: Copy config.json to /usr/local/etc/v2ray
+  copy:
+    src: config.json
+    dest: /usr/local/etc/v2ray/config.json
+    owner: root
+    group: root
+    mode: '0644'
+    state: replace
+
+- name: Start v2ray service
+  systemd:
+    name: v2ray
+    state: started
+
+- name: Enable v2ray service
+  systemd:
+    name: v2ray
+    enabled: yes
+
+# - name: Set temporary environment variables and curl google.com
+#   shell: |
+#     export ALL_PROXY=socks5://127.0.0.1:10808
+#     export http_proxy=http://127.0.0.1:10809
+#     export https_proxy=http://127.0.0.1:10809
+#     curl -I http://www.google.com
