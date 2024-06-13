@@ -1,4 +1,11 @@
 - name: Run dcgm-exporter Docker container
-  command: >
-    sudo docker run --name dcgm-exporter -d --rm --gpus all -p 9400:9400 nvcr.io/nvidia/k8s/dcgm-exporter
-  become: True
+  community.docker.docker_container:
+    name: dcgm-exporter
+    image: nvcr.io/nvidia/k8s/dcgm-exporter
+    state: started
+    restart_policy: absent
+    detach: true
+    remove: true
+    gpus: all
+    ports:
+      - "9400:9400"
