@@ -1,0 +1,84 @@
+- name: Update and upgrade apt packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+  become: yes
+
+- name: Install required packages
+  apt:
+    name:
+      - build-essential
+      - cmake
+      - clang
+      - pkg-config
+      - libssl-dev
+      - git
+      - screen
+    state: present
+  become: yes
+
+- name: Clone Aleo repository
+  git:
+    repo: https://github.com/AleoHQ/snarkOS.git
+    dest: /opt/snarkOS
+    version: main
+  become: yes
+
+- name: Build Aleo
+  command: cargo build --release
+  args:
+    chdir: /opt/snarkOS
+  environment:
+    RUSTFLAGS: "-C target-cpu=native"
+  become: yes
+
+- name: Install snarkOS
+  shell: |
+    cargo install --path .
+  args:
+    chdir: /opt/snarkOS
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+  become: yes
+
+- name: Generate Aleo account
+  command: snarkos account new
+  register: aleo_account
+  become: yes
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+
+- name: Save Aleo account details to file
+  copy:
+    content: "{{ aleo_account.stdout }}"
+    dest: /opt/snarkOS/aleo_account.txt
+  become: yes
+
+- name: Set up systemd service for Aleo miner
+  copy:
+    dest: /etc/systemd/system/aleo-miner.service
+    content: |
+      [Unit]
+      Description=Aleo Miner
+      After=network.target
+
+      [Service]
+      ExecStart=/usr/local/bin/snarkos start --account /opt/snarkOS/aleo_account.txt
+      WorkingDirectory=/opt/snarkOS
+      Restart=always
+      User=root
+
+      [Install]
+      WantedBy=multi-user.target
+  become: yes
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start Aleo miner service
+  systemd:
+    name: aleo-miner
+    enabled: yes
+    state: started
+  become: yes
