@@ -3,7 +3,7 @@
     name: dcgm-exporter
     image: nvcr.io/nvidia/k8s/dcgm-exporter
     state: started
-    restart_policy: absent
+    restart_policy: no
     detach: true
     remove: true
     gpus: all
