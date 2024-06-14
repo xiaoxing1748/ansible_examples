@@ -2,4 +2,4 @@
   package:
     name: htop
     state: present
-  become: True
+  become: yes

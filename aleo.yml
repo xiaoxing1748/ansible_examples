@@ -1,4 +1,4 @@
 - hosts: site
-  become: True
+  become: yes
   roles:
     - aleo

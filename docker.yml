@@ -1,4 +1,4 @@
 - hosts: site
-  become: true
+  become: yes
   roles:
   - docker
