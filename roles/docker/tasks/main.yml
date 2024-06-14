@@ -3,9 +3,12 @@
     name: dcgm-exporter
     image: nvcr.io/nvidia/k8s/dcgm-exporter
     state: started
-    restart_policy: no
     detach: true
-    remove: true
-    gpus: all
+    auto_remove: true
+    device_requests:
+      - driver: nvidia
+        count: -1
+        capabilities: [[gpu]]
     ports:
       - "9400:9400"
+    restart_policy: no
