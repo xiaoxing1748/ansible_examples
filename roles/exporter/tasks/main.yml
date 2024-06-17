@@ -1,29 +1,23 @@
 - name: Kill existing node_exporter process
-  become: yes
   shell: |
     pgrep node_exporter && sudo pkill node_exporter || echo "node_exporter not running"
 
 - name: Start node_exporter
-  become: yes
   shell: |
     cd /usr/local/node_exporter && sudo nohup ./node_exporter &
 
 - name: Kill existing process-exporter process
-  become: yes
   shell: |
     pgrep process-exporter && sudo pkill process-exporter || echo "process-exporter not running"
 
 - name: Start process-exporter
-  become: yes
   shell: |
     cd /usr/local/process-exporter && sudo nohup ./process-exporter -config.path process_name.yml &
 
 - name: Kill existing grok_exporter process
-  become: yes
   shell: |
     pgrep grok_exporter && sudo pkill grok_exporter || echo "grok_exporter not running"
 
 - name: Start grok_exporter
-  become: yes
   shell: |
     cd /usr/local/grok_exporter && sudo nohup ./grok_exporter -config ./example/config.yml &
