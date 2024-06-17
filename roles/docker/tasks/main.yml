@@ -1,4 +1,4 @@
-- name: Run dcgm-exporter Docker container
+- name: 启动DCGM-Exporter
   community.docker.docker_container:
     name: dcgm-exporter
     image: nvcr.io/nvidia/k8s/dcgm-exporter

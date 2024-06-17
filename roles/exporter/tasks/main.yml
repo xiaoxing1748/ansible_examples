@@ -1,0 +1,29 @@
+- name: Check and kill existing node_exporter process
+  shell: |
+    pgrep -f node_exporter && sudo pkill -f node_exporter
+  ignore_errors: yes
+
+- name: Check and kill existing process-exporter process
+  shell: |
+    pgrep -f process-exporter && sudo pkill -f process-exporter
+  ignore_errors: yes
+
+- name: Check and kill existing grok_exporter process
+  shell: |
+    pgrep -f grok_exporter && sudo pkill -f grok_exporter
+  ignore_errors: yes
+
+- name: Start node_exporter
+  shell: sudo nohup /usr/local/node_exporter/node_exporter &
+  args:
+    executable: /bin/bash
+
+- name: Start process-exporter
+  shell: sudo nohup /usr/local/process-exporter/process-exporter -config.path /usr/local/process-exporter/process_name.yml &
+  args:
+    executable: /bin/bash
+
+- name: Start grok_exporter
+  shell: sudo nohup /usr/local/grok_exporter/grok_exporter -config /usr/local/grok_exporter/config.yml &
+  args:
+    executable: /bin/bash

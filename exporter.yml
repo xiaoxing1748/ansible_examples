@@ -1,0 +1,4 @@
+- hosts: site
+  become: yes
+  roles:
+  - exporter
