@@ -1,0 +1,15 @@
+- name: Start dcgm-exporter container
+  community.docker.docker_container:
+    name: dcgm-exporter
+    image: nvcr.io/nvidia/k8s/dcgm-exporter
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "9400:9400"
+    detach: true
+    cleanup: yes
+    device_requests:
+      - driver: nvidia
+        count: -1
+        capabilities: 
+          - gpu
