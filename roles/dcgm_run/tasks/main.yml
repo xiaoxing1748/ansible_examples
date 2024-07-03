@@ -2,7 +2,7 @@
   file:
     path: /root/aleo-ws
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Copy dcgm.sh files to /root/aleo-ws
   copy:
@@ -10,7 +10,7 @@
     dest: /root/aleo-ws/dcgm.sh
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: Check if dcgm-exporter Docker image exists
   shell: docker images | grep dcgm-exporter
@@ -35,7 +35,6 @@
 #   changed_when: false
 #   failed_when: false
 
-
 # - name: Install nvidia-docker2 and nvidia-container-toolkit
 #   when: nv_gpgkey_check.rc != 0  # Only load if image not found
 #   apt:
@@ -56,17 +55,17 @@
 #   become: true
 
 - name: Copy dcgm-exporter.tar files to /root/aleo-ws
-  when: docker_image_check.rc != 0  # Only load if image not found
+  when: docker_image_check.rc != 0 # Only load if image not found
   copy:
     src: dcgm-exporter.tar
     dest: /root/aleo-ws/dcgm-exporter.tar
     owner: root
     group: root
-    mode: '0644'
+    mode: "0755"
 
 - name: Load dcgm-exporter Docker image if not present
   shell: docker load -i /root/aleo-ws/dcgm-exporter.tar
-  when: docker_image_check.rc != 0  # Only load if image not found
+  when: docker_image_check.rc != 0 # Only load if image not found
 
 - name: Execute dcgm.sh script
   shell: /bin/bash /root/aleo-ws/dcgm.sh

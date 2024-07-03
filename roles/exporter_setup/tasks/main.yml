@@ -2,6 +2,7 @@
   copy:
     src: exporters.zip
     dest: /usr/local/exporters.zip
+    force: yes
 
 - name: Check Unzip
   shell: unzip | grep "version info"
@@ -13,7 +14,7 @@
   when: unzip_check.rc != 0
   become: true
   apt:
-    name: 
+    name:
       - unzip
     state: present
     update_cache: yes
