@@ -10,6 +10,10 @@ process_names:
 
   - name: "{{.Matches}}"
     cmdline:
+      - "aleo-miner"
+
+  - name: "{{.Matches}}"
+    cmdline:
       - "f3-prover"
 
   - name: "{{.Matches}}"

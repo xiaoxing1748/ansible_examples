@@ -12,7 +12,10 @@ imports:
 
 grok_patterns:
   - 'PROVER_LOG perf: %{NUMBER:total_perf} \(1m: %{NUMBER:proof1m} P\/s, 5m: %{NUMBER:proof5m} P\/s, 30m: %{NUMBER:proof30m} P\/s, 60m: %{NUMBER:proof60m} P\/s\)'
-  - 'DISCONNECTED_LOG perf: %{LOGLEVEL:log_level} \[%{DATA:component}\] %{GREEDYDATA:message}'
+  - 'DISCONNECT_LOG \[In\] Disconnected from pool std'
+  - "ERROR_LOG ERROR: Please check if the network is abnormal."
+  - "TARGET_LOG Found a solution with target %{NUMBER:target_value}"
+
 metrics:
   - type: gauge
     name: proof1m
@@ -39,15 +42,22 @@ metrics:
     value: "{{.proof60m}}"
 
   - type: counter
-    name: disconnected_from_pool_std
-    help: "Number of occurrences of 'Disconnected from pool std'"
-    match: "%{DISCONNECTED_LOG}"
+    name: DISCONNECT_FROM_POOL
+    help: Counter for disconnections from pool
+    match: "%{DISCONNECT_LOG}"
     value: "1"
-    labels:
-      log_level: "{{.log_level}}"
-      component: "{{.component}}"
-    conditions:
-      - "{{.message}} == 'Disconnected from pool std'"
+
+  - type: counter
+    name: ERROR_NETWORK
+    help: Counter for network error occurrences
+    match: "%{ERROR_LOG}"
+    value: "1"
+
+  - type: counter
+    name: FOUND_TARGET
+    help: Counter for found solutions with targets
+    match: "%{TARGET_LOG}"
+    value: "1"
 
 server:
   protocol: http
