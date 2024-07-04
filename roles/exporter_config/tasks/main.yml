@@ -2,40 +2,40 @@
   file:
     path: /usr/local/grok_exporter
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Copy grok_config.yml to /usr/local/grok_exporter
-  copy:
+  ansible.builtin.copy:
     src: grok_config.yml
     dest: /usr/local/grok_exporter/grok_config.yml
     owner: root
     group: root
-    mode: '0644'
-    state: replace
+    mode: "0644"
+    force: yes
 
 - name: Ensure /usr/local/process-exporter directory exists
   file:
     path: /usr/local/process-exporter
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Copy process_name.yml to /usr/local/process-exporter
-  copy:
+  ansible.builtin.copy:
     src: process_name.yml
     dest: /usr/local/process-exporter/process_name.yml
     owner: root
     group: root
-    mode: '0644'
-    state: replace
+    mode: "0644"
+    force: yes
 
 - name: Create logs directory
   file:
     path: /logs
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Create prover.log file
   file:
-    path: /logs/f3prover.log
+    path: /logs/f2pool.log
     state: touch
-    mode: '0644'
+    mode: "0644"
