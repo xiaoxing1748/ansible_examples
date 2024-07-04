@@ -3,40 +3,51 @@ global:
 
 input:
   type: file
-  path: /logs/f3prover.log
+  path: /logs/f2pool.log
   readall: false # 从文件末尾开始读取
 
 imports:
-- type: grok_patterns
-  dir: ./patterns
+  - type: grok_patterns
+    dir: ./patterns
 
 grok_patterns:
-- 'PROVER_LOG perf: %{NUMBER:total_perf} \(1m: %{NUMBER:proof1m} P\/s, 5m: %{NUMBER:proof5m} P\/s, 30m: %{NUMBER:proof30m} P\/s, 60m: %{NUMBER:proof60m} P\/s\)'
-
+  - 'PROVER_LOG perf: %{NUMBER:total_perf} \(1m: %{NUMBER:proof1m} P\/s, 5m: %{NUMBER:proof5m} P\/s, 30m: %{NUMBER:proof30m} P\/s, 60m: %{NUMBER:proof60m} P\/s\)'
+  - 'DISCONNECTED_LOG perf: %{LOGLEVEL:log_level} \[%{DATA:component}\] %{GREEDYDATA:message}'
 metrics:
-- type: gauge
-  name: proof1m
-  help: Proof rate for 1 minute
-  match: '%{PROVER_LOG}'
-  value: '{{.proof1m}}'
+  - type: gauge
+    name: proof1m
+    help: Proof rate for 1 minute
+    match: "%{PROVER_LOG}"
+    value: "{{.proof1m}}"
 
-- type: gauge
-  name: proof5m
-  help: Proof rate for 5 minutes
-  match: '%{PROVER_LOG}'
-  value: '{{.proof5m}}'
+  - type: gauge
+    name: proof5m
+    help: Proof rate for 5 minutes
+    match: "%{PROVER_LOG}"
+    value: "{{.proof5m}}"
 
-- type: gauge
-  name: proof30m
-  help: Proof rate for 30 minutes
-  match: '%{PROVER_LOG}'
-  value: '{{.proof30m}}'
+  - type: gauge
+    name: proof30m
+    help: Proof rate for 30 minutes
+    match: "%{PROVER_LOG}"
+    value: "{{.proof30m}}"
 
-- type: gauge
-  name: proof60m
-  help: Proof rate for 60 minutes
-  match: '%{PROVER_LOG}'
-  value: '{{.proof60m}}'
+  - type: gauge
+    name: proof60m
+    help: Proof rate for 60 minutes
+    match: "%{PROVER_LOG}"
+    value: "{{.proof60m}}"
+
+  - type: counter
+    name: disconnected_from_pool_std
+    help: "Number of occurrences of 'Disconnected from pool std'"
+    match: "%{DISCONNECTED_LOG}"
+    value: "1"
+    labels:
+      log_level: "{{.log_level}}"
+      component: "{{.component}}"
+    conditions:
+      - "{{.message}} == 'Disconnected from pool std'"
 
 server:
   protocol: http
