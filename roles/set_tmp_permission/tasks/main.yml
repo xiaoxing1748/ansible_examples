@@ -1,0 +1,5 @@
+- name: Set permissions on /tmp directory
+  file:
+    path: /tmp
+    mode: "1777"
+    state: directory

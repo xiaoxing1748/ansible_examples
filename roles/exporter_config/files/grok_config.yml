@@ -3,7 +3,7 @@ global:
 
 input:
   type: file
-  path: /logs/f2pool.log
+  path: /root/logs/f2pool.log
   readall: false # 从文件末尾开始读取
 
 imports:

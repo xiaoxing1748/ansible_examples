@@ -13,9 +13,9 @@
 - name: Install Unzip
   when: unzip_check.rc != 0
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
-      - unzip
+    - unzip
     state: present
     update_cache: yes
 

@@ -30,12 +30,12 @@
 
 - name: Create logs directory
   file:
-    path: /logs
+    path: /root/logs
     state: directory
     mode: "0755"
 
 - name: Create prover.log file
   file:
-    path: /logs/f2pool.log
+    path: /root/logs/f2pool.log
     state: touch
     mode: "0644"
