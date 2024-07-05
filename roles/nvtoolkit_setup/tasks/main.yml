@@ -2,7 +2,7 @@
   ansible.builtin.get_url:
     url: https://nvidia.github.io/libnvidia-container/gpgkey
     dest: /tmp/nvidia-gpgkey
-    mode: "0644"
+    mode: "1777"
 
 - name: Check if NVIDIA GPG keyring exists
   ansible.builtin.stat:
@@ -19,7 +19,7 @@
   ansible.builtin.get_url:
     url: https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list
     dest: /tmp/nvidia-container-toolkit.list
-    mode: "0644"
+    mode: "1777"
 
 - name: Modify the container toolkit list to include the signed-by option
   ansible.builtin.command:
@@ -36,7 +36,7 @@
   ansible.builtin.copy:
     content: "{{ modified_list.stdout }}"
     dest: /etc/apt/sources.list.d/nvidia-container-toolkit.list
-    mode: "0644"
+    mode: "1777"
   become: yes
   when: not toolkitlist.stat.exists
 
