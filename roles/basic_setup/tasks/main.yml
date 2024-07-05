@@ -7,12 +7,12 @@
 
 - name: Change hostname
   become: true
-  command: hostnamectl set-hostname {{ ansible_default_ipv4.address | regex_replace('\\.', '-') }}
+  command: hostnamectl set-hostname {{ ansible_default_ipv4.address | regex_replace('\.', '-') }}
 
 - name: Install apt packages
   become: true
   apt:
-    name: 
+    name:
       - openssh-client
       - unzip
       - net-tools
