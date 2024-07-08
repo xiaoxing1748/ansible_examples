@@ -12,7 +12,7 @@ imports:
 
 grok_patterns:
   - 'PROVER_LOG perf: %{NUMBER:total_perf} \(1m: %{NUMBER:proof1m} P\/s, 5m: %{NUMBER:proof5m} P\/s, 30m: %{NUMBER:proof30m} P\/s, 60m: %{NUMBER:proof60m} P\/s\)'
-  - 'DISCONNECT_LOG \[In\] Disconnected from pool std'
+  - 'DISCONNECT_LOG Disconnected from pool std'
   - "ERROR_LOG ERROR: Please check if the network is abnormal."
   - "TARGET_LOG Found a solution with target %{NUMBER:target_value}"
 
