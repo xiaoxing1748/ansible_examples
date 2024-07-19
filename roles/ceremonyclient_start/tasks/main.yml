@@ -1,0 +1,15 @@
+# - name: Stop ceremonyclient
+#   command: service ceremonyclient stop
+
+# - name: Start ceremonyclient
+#   command: service ceremonyclient start
+
+# - name: Stop ceremonyclient
+#   ansible.builtin.service:
+#     name: ceremonyclient
+#     state: stopped
+
+- name: Start ceremonyclient
+  ansible.builtin.service:
+    name: ceremonyclient
+    state: started

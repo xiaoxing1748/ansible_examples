@@ -1,0 +1,10 @@
+- name: Check for 'default' in keys.yml
+  ansible.builtin.command: cat /root/ceremonyclient/node/.config/keys.yml |grep default-proving-key
+  register: grep_result
+  failed_when: grep_result.stdout == ""
+  changed_when: false
+
+- name: Display result
+  ansible.builtin.debug:
+    msg: "Found 'default' in /root/keys.yml"
+  when: grep_result.stdout != ""

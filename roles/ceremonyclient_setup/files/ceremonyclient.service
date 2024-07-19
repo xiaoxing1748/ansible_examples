@@ -1,0 +1,12 @@
+#/lib/systemd/system/ceremonyclient.service
+[Unit]
+Description=Ceremony Client Go App Service
+[Service]
+Type=simple
+Restart=always
+RestartSec=5s
+WorkingDirectory=/root/ceremonyclient/node
+Environment=GOEXPERIMENT=arenas
+ExecStart=/root/ceremonyclient/node/node-1.4.21-linux-amd64
+[Install]
+WantedBy=multi-user.target
