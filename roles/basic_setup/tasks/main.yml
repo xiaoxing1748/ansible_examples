@@ -31,7 +31,7 @@
 - name: Edit ~/.bashrc
   lineinfile:
     path: ~/.bashrc
-    line: 'alias f2log="tail -100f /logs/f2pool.log"'
+    line: 'alias f2log="tail -100f /root/logs/f2pool.log"'
     state: present
 
 - name: Source ~/.bashrc
