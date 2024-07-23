@@ -1,0 +1,13 @@
+- name: Copy config.json to /usr/local/etc/v2ray
+  copy:
+    src: config.json
+    dest: /usr/local/etc/v2ray/config.json
+    owner: root
+    group: root
+    mode: "0644"
+    state: replace
+
+- name: Start v2ray service
+  systemd:
+    name: v2ray
+    state: restart

@@ -1,0 +1,3 @@
+- hosts: site
+  roles:
+    - v2ray_config

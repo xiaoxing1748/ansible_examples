@@ -1,10 +1,32 @@
 - name: Check for 'default' in keys.yml
   ansible.builtin.command: cat /root/ceremonyclient/node/.config/keys.yml |grep default-proving-key
-  register: grep_result
-  failed_when: grep_result.stdout == ""
+  register: grep_result_keys
+  failed_when: grep_result_keys.stdout == ""
   changed_when: false
 
 - name: Display result
   ansible.builtin.debug:
     msg: "Found 'default' in /root/keys.yml"
-  when: grep_result.stdout != ""
+  when: grep_result_keys.stdout != ""
+
+# - name: Check for status
+#   ansible.builtin.command: service ceremonyclient status|grep "active (running)"
+#   register: grep_result_status
+#   failed_when: grep_result_status.stdout == ""
+#   changed_when: false
+
+# - name: Display result
+#   ansible.builtin.debug:
+#     msg: "Active"
+#   when: grep_result_status.stdout != ""
+
+- name: Check balance
+  command: ./node-1.4.21-linux-amd64 -node-info
+  args:
+    chdir: /root/ceremonyclient/node/
+  register: command_output
+  changed_when: False
+
+- name: Debug output containing 'QUIL'
+  debug:
+    msg: "{{ command_output.stdout_lines | select('search', 'QUIL') | list }}"

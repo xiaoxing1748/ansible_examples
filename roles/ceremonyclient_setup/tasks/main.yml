@@ -1,35 +1,44 @@
-- name: Copy ceremonyclient.zip
+# - name: Copy ceremonyclient.zip
+#   copy:
+#     src: ceremonyclient.zip
+#     dest: /root/ceremonyclient.zip
+#     force: yes
+
+# - name: Check Unzip
+#   shell: unzip | grep "version info"
+#   register: unzip_check
+#   changed_when: false
+#   failed_when: false
+
+# - name: Install Unzip
+#   when: unzip_check.rc != 0
+#   become: true
+#   ansible.builtin.apt:
+#     name:
+#     - unzip
+#     state: present
+#     update_cache: yes
+
+# - name: Unzip ceremonyclient.zip
+#   ansible.builtin.unarchive:
+#     src: /root/ceremonyclient.zip
+# dest: /root/
+# remote_src: yes
+
+# - name: Copy ceremonyclient.service
+#   copy:
+#     src: ceremonyclient.service
+#     dest: /lib/systemd/system/ceremonyclient.service
+#     force: yes
+
+# - name: Set execute permissions on directories and their contents
+#   command: chmod -R +x /root/ceremonyclient
+
+- name: Copy qone
   copy:
-    src: ceremonyclient.zip
-    dest: /root/ceremonyclient.zip
-    force: yes
-
-- name: Check Unzip
-  shell: unzip | grep "version info"
-  register: unzip_check
-  changed_when: false
-  failed_when: false
-
-- name: Install Unzip
-  when: unzip_check.rc != 0
-  become: true
-  ansible.builtin.apt:
-    name:
-      - unzip
-    state: present
-    update_cache: yes
-
-- name: Unzip ceremonyclient.zip
-  ansible.builtin.unarchive:
-    src: /root/ceremonyclient.zip
-    dest: /root/
-    remote_src: yes
-
-- name: Copy ceremonyclient.service
-  copy:
-    src: ceremonyclient.service
-    dest: /lib/systemd/system/ceremonyclient.service
+    src: qone.sh
+    dest: /root/qone.sh
     force: yes
 
 - name: Set execute permissions on directories and their contents
-  command: chmod -R +x /root/ceremonyclient
+  command: chmod +x /root/qone.sh
