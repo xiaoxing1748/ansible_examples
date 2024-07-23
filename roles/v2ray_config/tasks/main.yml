@@ -5,9 +5,9 @@
     owner: root
     group: root
     mode: "0644"
-    state: replace
+    force: yes
 
 - name: Start v2ray service
   systemd:
     name: v2ray
-    state: restart
+    state: restarted
