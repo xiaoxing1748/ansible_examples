@@ -1,0 +1,19 @@
+- name: Ensure the local directory exists
+  local_action:
+    module: file
+    path: "/semaphore_workspace/node/{{ inventory_hostname }}"
+    state: directory
+
+- name: Fetch keys.yml from the remote server
+  fetch:
+    src: /root/ceremonyclient/node/.config/keys.yml
+    dest: "/semaphore_workspace/node/{{ inventory_hostname }}/keys.yml"
+    flat: yes
+    force: yes
+
+- name: Fetch config.yml from the remote server
+  fetch:
+    src: /root/ceremonyclient/node/.config/config.yml
+    dest: "/semaphore_workspace/node/{{ inventory_hostname }}/config.yml"
+    flat: yes
+    force: yes
